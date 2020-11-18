@@ -21,3 +21,87 @@ Zadanie2
 Zadanie3
  update postac set statek='drakar' where rodzaj LIKE '%a%';
  update statek set max_ladownosc=max_ladownosc*0.7 where data_wodowania >= '2000-01-01' and data_wodowania <'2000-01-15';
+ alter table postac add check (wiek<1000);
+
+Zadanie 4
+a)
+	alter table postac modify rodzaj enum('kobieta','ptak','wiking','syrena','waz');
+	insert into postac values(9,'Loko','waz','2010-03-08',10,NULL,default,NULL);
+b)
+	create table marynarz select * from postac;
+	create table marynarz2 like postac;
+	insert into marynarz2 select * from postac where statek!=null;
+
+Zadanie 5
+a)
+	update postac set statek=null;
+b)
+	delete from postac where id_postaci=6 and rodzaj='wiking';
+c)
+	delete from statek;
+d)
+	drop table statek;
+e)
+	create table zwierz(
+   	 -> id int auto_increment,
+   	 -> nazwa varchar(100),
+   	 -> wiek int,
+    	 -> primary key(id));
+f)
+	insert into zwierz select id_postaci,nazwa,wiek from postac where rodzaj='ptak';
+	insert into zwierz select id_postaci,nazwa,wiek from postac where rodzaj='waz';
+
+
+
+
+
+
+
+
+
+Lab 05:
+Zad1
+1.
+	create table Mkreatura  like wikingowie.kreatura;
+	insert into Mkreatura select * from wikingowie.kreatura;
+
+	create table Mzasob  like wikingowie.zasob;
+	insert into Mzasob select * from wikingowie.zasob;
+
+	create table Mekwipunek  like wikingowie.ekwipunek;
+	insert into Mekwipunek select * from wikingowie.ekwipunek;
+
+2.
+	select * from zasob;
+3.
+	select * from zasob where rodzaj='jedzenie';
+4.
+	SELECT idZasobu, ilosc FROM ekwipunek WHERE idKreatury IN(1, 3, 5);
+
+Zad2.
+1.
+	select * from Mkreatura where rodzaj!='wiedzma' and udzwig>=50;
+
+2.
+	select * from Mzasob where waga>=2 and waga<=5;
+
+3.
+	select * from Mkreatura where nazwa like '%or%' and udzwig between 30 and 70;
+
+Zad3
+1.
+	select * from Mzasob where month(dataPozyskania) in (7,8);
+
+2.
+	select * from Mzasob where rodzaj!='' order by waga asc;
+
+3.
+	select * from Mkreatura order by dataUr asc limit 5;
+
+Zad4
+1.
+	select distinct(rodzaj) from Mzasob;
+
+2.
+	select concat(nazwa," - ",rodzaj)from Mkreatura where rodzaj like 'wi%';
+	
