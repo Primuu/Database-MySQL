@@ -103,5 +103,52 @@ Zad4
 	select distinct(rodzaj) from Mzasob;
 
 2.
-	select concat(nazwa," - ",rodzaj)from Mkreatura where rodzaj like 'wi%';
+	select concat(nazwa, " - ", rodzaj) as kreatura from Mkreatura where rodzaj like 'wi%';
+	
+3.
+	select ilosc*waga from Mzasob where dataPozyskania between '2000-01-01' and '2007-12-31';
+
+Zad5
+1.
+	select nazwa,ilosc*waga*0.7 as 'masa wlasciwa', ilosc*waga*0.3 as 'odpady' from Mzasob where rodzaj='jedzenie';
+
+2.
+	select * from Mzasob where rodzaj is null;
+
+3.
+	select distinct rodzaj, nazwa from Mzasob where nazwa like 'Ba%' or nazwa like '%os' order by nazwa asc;
+
+
+
+
+
+
+
+
+
+Lab06:
+Zad1
+1.
+	select avg(waga) from Mkreatura where rodzaj='wiking';
+
+2.
+	select rodzaj,avg(waga),count(nazwa) from Mkreatura group by rodzaj;
+
+3.
+	select rodzaj,round(avg(year(now())-year(dataUr)),0) as 'sredni_wiek' from Mkreatura group by rodzaj;
+
+
+
+Zad2
+1.
+	select rodzaj, sum(waga*ilosc) from Mzasob group by rodzaj;
+
+2.
+	select nazwa, avg(waga) from Mzasob group by nazwa having avg(waga)>10 and sum(ilosc)>=4;
+
+3.
+	select rodzaj,count(distinct(nazwa)) from Mzasob group by rodzaj having sum(ilosc)>1;
+
+Zad3
+1.
 	
