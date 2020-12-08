@@ -266,6 +266,54 @@ Zad5
 	SELECT k.nazwa, datediff(data_rozpoczecia, dataUR) AS "wiek w dniach"
 FROM kreatura AS k, wyprawa AS w, etapy_wyprawy AS e, sektor AS s
 where e.sektor=s.id_sektora 
-AND e.sektor=7
-;
+AND e.sektor=7;
+	
+
+
+
+
+
+
+
+
+
+Lab08:
+Zad1
+1.
+	DELIMITER //
+	CREATE TRIGGER kreatura_before_insert
+	BEFORE INSERT ON kreatura
+	FOR EACH ROW
+	BEGIN
+	IF NEW.waga < 0
+	THEN
+	SET NEW.waga = 0;
+	END IF;
+	END
+	//
+	DELIMITER ;
+
+
+Zad2
+1.
+	CREATE TABLE archiwum_wypraw (
+	id_wyprawy int not null auto_increment,
+	nazwa varchar(200) not null,
+	data_rozpoczecia date not null,
+	data_zakonczenia date not null,
+	kierownik varchar(200) not null,
+	primary key (id_wyprawy));
+
+	DELIMITER //
+	CREATE TRIGGER wyprawa_after_delete
+	AFTER DELETE ON wyprawa
+	FOR EACH ROW
+	BEGIN
+	INSERT INTO archiwum_wypraw VALUES(OLD.id_wyprawy, OLD.nazwa, OLD.data_rozpoczecia,
+	OLD.data_zakonczenia, (SELECT k.nazwa from kreatura where k.idKreatury=OLD.kierownik));
+	END
+	//
+	DELIMITER ;
+
+	
 	
