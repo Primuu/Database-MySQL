@@ -315,5 +315,64 @@ Zad2
 	//
 	DELIMITER ;
 
-	
-	
+
+Zad3
+1.
+	DELIMITER //
+	CREATE PROCEDURE eliksir_sily(IN id int)
+	BEGIN
+	Update kreatura set udzwig = 1.2 * udzwig where idKreatury = id;
+	END //
+	DELIMITER ;
+
+2.
+	DELIMITER //
+	CREATE FUNCTION wielkosc(tekst)
+	RETURNS VARCHAR(255)
+	BEGIN
+	DECLARE wtekst VARCHAR(255);
+	SELECT UPPER(tekst) INTO @wtekst;
+	RETURN @wtekst;
+	END //
+	DELIMITER ;
+
+
+
+Zad4.
+1.
+	CREATE TABLE system_alarmowy(
+	id_alarmu INT NOT NULL AUTO_INCREMENT,
+	wiadomosc VARCHAR(30));
+
+2.
+	DELIMITER //
+	CREATE TRIGGER ioio
+	AFTER INSERT ON wyprawa
+	FOR EACH ROW
+	BEGIN
+	DECLARE i INT;
+	SELECT count(*) INTO i
+	FROM etapy_wyprawy ew, kreatura k, wyprawa w, uczestnicy u
+	WHERE ew.idWyprawy=w.id_wyprawy AND k.idKreatury=u.id_uczestnika
+	AND u.id_wyprawy=w.id_wyprawy
+	AND k.nazwa='Tesciowa' AND ew.sektor=7
+	AND w.id_wyprawy=NEW.id_wyprawy;
+	IF i>0
+  	THEN
+    	INSERT INTO system_alarmowy VALUES(default, 'Tesciowa nadchodzi !!!')
+ 	END IF;
+	END
+	//
+	DELIMITER ;	
+
+Zad5
+1.
+	DELIMITER $$
+	CREATE PROCEDURE udzwigi(OUT sr FLOAT, OUT su FLOAT, OUT max FLOAT)
+	BEGIN
+	SELECT AVG(udzwig), SUM(udzwig), MAX(udzwig) INTO sr, su, max 
+	FROM kreatura;
+	END
+	$$
+	DELIMITER ;
+
