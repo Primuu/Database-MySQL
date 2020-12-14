@@ -43,10 +43,10 @@ d)
 	drop table statek;
 e)
 	create table zwierz(
-   	 -> id int auto_increment,
-   	 -> nazwa varchar(100),
-   	 -> wiek int,
-    	 -> primary key(id));
+   	id int auto_increment,
+   	nazwa varchar(100),
+   	wiek int,
+    	primary key(id));
 f)
 	insert into zwierz select id_postaci,nazwa,wiek from postac where rodzaj='ptak';
 	insert into zwierz select id_postaci,nazwa,wiek from postac where rodzaj='waz';
@@ -261,12 +261,12 @@ Zad4.
 	GROUP BY w.nazwa;
 
 
-Zad5
+Zad5 ----BŁĄD
 1.
 	SELECT k.nazwa, datediff(data_rozpoczecia, dataUR) AS "wiek w dniach"
-FROM kreatura AS k, wyprawa AS w, etapy_wyprawy AS e, sektor AS s
-where e.sektor=s.id_sektora 
-AND e.sektor=7;
+	FROM kreatura AS k, wyprawa AS w, etapy_wyprawy AS e, sektor AS s
+	where e.sektor=s.id_sektora 
+	AND e.sektor=7;
 	
 
 
@@ -375,4 +375,56 @@ Zad5
 	END
 	$$
 	DELIMITER ;
+
+2.
+	-----
+
+
+
+
+
+
+
+CZĘŚĆ 2
+Zad1.
+	SELECT imie, nazwisko, nazwa 
+	FROM pracownik, dzial 
+	WHERE dzial.id_dzialu=pracownik.dzial;
+
+
+Zad2
+	SELECT t.nazwa_towaru, k.nazwa_kategori, s.ilosc 
+	FROM towar AS t INNER JOIN kategoria AS k 
+	ON k.id_kategori=t.kategoria INNER JOIN stan_magazynowy AS s 
+	ON t.id_towaru=s.towar 
+	ORDER BY nazwa_towaru DESC;
+
+
+Zad3
+	SELECT z.numer_zamowienia, st.nazwa_statusu_zamowienia 
+	FROM zamowienie AS z INNER JOIN status_zamowienia AS st 
+	ON id_statusu_zamowienia=status_zamowienia 
+	WHERE status_zamowienia = 6;
+
+
+Zad4
+	SELECT k.pelna_nazwa, a.ulica, a.kod, a.miejscowosc, ty.nazwa 
+	FROM klient AS k INNER JOIN adres_klienta AS a 
+	ON id_klienta=klient INNER JOIN typ_adresu AS ty ON a.typ_adresu=ty.id_typu
+	WHERE a.miejscowosc='Olsztyn' AND ty.id_typu=1;
+
+
+Zad5
+	SELECT DISTINCT id_jednostki FROM jednostka_miary
+	WHERE id_jednostki NOT IN (SELECT distinct jm FROM stan_magazynowy);
+lub
+	SELECT * FROM jednostka_miary LEFT JOIN stan_magazynowy
+	ON jednostka_miary.id_jednostki=stan_magazynowy.jm
+	WHERE stan_magazynowy.jm is null;
+
+
+Zad6
+	
+
+
 
