@@ -1,5 +1,4 @@
 Lab 04:
-
 Zadanie1
  select * from postac where rodzaj='wiking' order by data_ur;
  delete from postac where id_postaci='4';
@@ -11,6 +10,7 @@ Zadanie1
  alter table postac modify id_postaci int;
  alter table postac drop primary key;
 
+
 Zadanie2
  alter table postac add column pesel varchar(255) not null;
  update postac set pesel='12345678910'+id_postaci;
@@ -18,10 +18,12 @@ Zadanie2
  alter table postac modify rodzaj enum ('kobieta','ptak','wiking','syrena');
  insert into postac values(8,'Gertruda Nieszczera','syrena','2000-06-07',20,default,default,12345678945);
 
+
 Zadanie3
  update postac set statek='drakar' where rodzaj LIKE '%a%';
  update statek set max_ladownosc=max_ladownosc*0.7 where data_wodowania >= '2000-01-01' and data_wodowania <'2000-01-15';
  alter table postac add check (wiek<1000);
+
 
 Zadanie 4
 a)
@@ -31,6 +33,7 @@ b)
 	create table marynarz select * from postac;
 	create table marynarz2 like postac;
 	insert into marynarz2 select * from postac where statek!=null;
+
 
 Zadanie 5
 a)
@@ -71,12 +74,17 @@ Zad1
 	create table Mekwipunek  like wikingowie.ekwipunek;
 	insert into Mekwipunek select * from wikingowie.ekwipunek;
 
+
 2.
 	select * from zasob;
+
 3.
 	select * from zasob where rodzaj='jedzenie';
+
 4.
 	SELECT idZasobu, ilosc FROM ekwipunek WHERE idKreatury IN(1, 3, 5);
+
+
 
 Zad2.
 1.
@@ -88,6 +96,7 @@ Zad2.
 3.
 	select * from Mkreatura where nazwa like '%or%' and udzwig between 30 and 70;
 
+
 Zad3
 1.
 	select * from Mzasob where month(dataPozyskania) in (7,8);
@@ -98,6 +107,7 @@ Zad3
 3.
 	select * from Mkreatura order by dataUr asc limit 5;
 
+
 Zad4
 1.
 	select distinct(rodzaj) from Mzasob;
@@ -107,6 +117,7 @@ Zad4
 	
 3.
 	select ilosc*waga from Mzasob where dataPozyskania between '2000-01-01' and '2007-12-31';
+
 
 Zad5
 1.
@@ -424,7 +435,115 @@ lub
 
 
 Zad6
+	SELECT z.numer_zamowienia, t.nazwa_towaru, po.ilosc, po.cena 
+	FROM zamowienie AS z INNER JOIN pozycja_zamowienia AS po 
+	ON z.id_zamowienia=po.zamowienie INNER JOIN towar AS t ON t.id_towaru=po.towar
+	WHERE z.data_zamowienia  BETWEEN '1.01.2018' AND '31.12.2018';
+
+
+Zad7
+	---
+
+
+Zad8
+	SELECT po.id_pozycji, z.data_zamowienia  
+	FROM pozycja_zamowienia AS po INNER JOIN zamowienie AS z 
+	ON z.id_zamowienia=po.zamowienie 
+	ORDER BY z.data_zamowienia ASC 
+	LIMIT 5;
+
+
+Zad9
+	SELECT z.id_zamowienia, s.nazwa_statusu_zamowienia
+	FROM zamowienie AS z INNER JOIN status_zamowienia AS s
+	ON z.status_zamowienia=s.id_statusu_zamowienia
+	WHERE s.nazwa_statusu_zamowienia!="zrealizowane";
+
+lub
+
+	SELECT z.id_zamowienia, s.nazwa_statusu_zamowienia
+	FROM zamowienie AS z INNER JOIN status_zamowienia AS s
+	ON z.status_zamowienia=s.id_statusu_zamowienia
+	WHERE z.status_zamowienia!=5;
+
+
+Zad10
+	SELECT kod
+	FROM adres_klienta
+	WHERE kod NOT LIKE '__-___';
+
+LEPSZE =>	SELECT *
+		FROM adres_klienta
+		WHERE kod NOT REGEXP '[0-9]{2}-[0-9]{3}';
+
+
+
+
+
+
+
+
+
+POWTORZENIE
+
+
+
+
+
+
+
+Zad1
+	SELECT imie, nazwisko, YEAR(data_urodzenia) AS rok_urodzenia
+	FROM pracownik;
+
+
+Zad2
+	SELECT imie, nazwisko, (YEAR(now()-YEAR(data_urodzenia)) AS rok_urodzenia
+	FROM pracownik;
+
+
+Zad3
+	SELECT d.nazwa, COUNT(p.id_pracownika) AS liczba_pracownikow 
+	FROM pracownik AS p, dzial AS d 
+	WHERE p.dzial=d.id_dzialu 
+	GROUP BY p.dzial;
+
+
+Zad4
+	SELECT k.nazwa_kategori, count(t.id_towaru) AS ilosc_towaru 
+	FROM kategoria AS k, towar AS t 
+	WHERE k.id_kategori=t.kategoria 
+	GROUP BY k.nazwa_kategori;
+
+
+Zad5
+	SELECT k.nazwa_kategori, GROUP_CONCAT(t.nazwa_towaru) AS nazwa_towaru 
+	FROM kategoria AS k, towar AS t 
+	WHERE k.id_kategori = t.kategoria 
+	GROUP BY k.nazwa_kategori;
+
+
+Zad6
+	SELECT ROUND(AVG(pensja), 2) AS srednia 
+	FROM pracownik;
+
+
+Zad7
+	SELECT AVG(pensja) AS srednia_zarobków 
+	FROM pracownik
+	WHERE (YEAR(now())-YEAR(data_zatrudnienia)) >= 5;
+
+
+
+Zad8
+	SELECT t.nazwa_towaru, SUM(p.ilosc) AS suma_sprzedanych
+	FROM pozycja_zamowienia AS p, towar AS t
+	WHERE t.id_towaru=p.towar
+	GROUP BY towar
+	ORDER BY suma_sprzedanych DESC
+	LIMIT 10;
+
+
+Zad9
 	
-
-
-
+    
