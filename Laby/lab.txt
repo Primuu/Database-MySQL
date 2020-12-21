@@ -545,5 +545,47 @@ Zad8
 
 
 Zad9
-	
+	SELECT z.numer_zamowienia, SUM(po.ilosc*po.cena) AS wartosc 
+	FROM zamowienie AS z, pozycja_zamowienia AS po 
+	WHERE z.data_zamowienia BETWEEN '2017-01-01' AND '2017-03-31' 
+	GROUP BY z.numer_zamowienia;
+
+
+Zad10
+	SELECT p.imie, p.nazwisko, SUM(pz.cena*pz.ilosc) AS suma_wartości 
+	FROM pracownik AS p, zamowienie AS z, pozycja_zamowienia AS pz
+	WHERE p.id_pracownika=z.pracownik_id_pracownika
+	AND pz.zamowienie=z.id_zamowienia
+	GROUP BY z.pracownik_id_pracownika
+	ORDER BY suma_wartosci DESC;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
