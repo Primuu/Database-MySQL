@@ -1,3 +1,146 @@
+-- -----------------------------------------------------
+-- Table `trentowskia`.`Pracownik`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `trentowskia`.`Pracownik` (
+  `Pesel` INT UNSIGNED NOT NULL,
+  `Imie` VARCHAR(45) NOT NULL,
+  `Nazwisko` VARCHAR(45) NOT NULL,
+  `Data_ur` DATE NOT NULL,
+  `Nr_telefonu` VARCHAR(15) NOT NULL,
+  `Email` VARCHAR(70) NULL,
+  `Nr_konta_bank` VARCHAR(20) NULL,
+  `Data_zatrudnienia` DATE NOT NULL,
+  `Data_zwolnienia` DATE NULL,
+  PRIMARY KEY (`Pesel`),
+  UNIQUE INDEX `Pesel_UNIQUE` (`Pesel` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `trentowskia`.`Dostawca`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `trentowskia`.`Dostawca` (
+  `Id_dostawcy` INT UNSIGNED NOT NULL,
+  `Nazwa` VARCHAR(70) NOT NULL,
+  `Nr_rozliczeniowy` VARCHAR(20) NOT NULL,
+  `Nr_kontaktowy` VARCHAR(15) NOT NULL,
+  `Miasto` VARCHAR(60) NOT NULL,
+  `Ulica` VARCHAR(45) NULL,
+  `Kod_pocztowy` VARCHAR(6) NOT NULL,
+  PRIMARY KEY (`Id_dostawcy`),
+  UNIQUE INDEX `Id_dostawcy_UNIQUE` (`Id_dostawcy` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `trentowskia`.`Paliwo`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `trentowskia`.`Paliwo` (
+  `Id_rodzaju` INT UNSIGNED NOT NULL,
+  `Rodzaj` ENUM('Benzyna', 'ON', 'LPG') NOT NULL,
+  `Cena_l` DECIMAL(4,2) NOT NULL,
+  `Stan_objetosci` FLOAT UNSIGNED NOT NULL,
+  PRIMARY KEY (`Id_rodzaju`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `trentowskia`.`Dostawa_paliwa`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `trentowskia`.`Dostawa_paliwa` (
+  `Id_dostawy_p` INT UNSIGNED NOT NULL,
+  `Id_dostawcy` INT UNSIGNED NOT NULL,
+  `Id_rodzaju` INT UNSIGNED NOT NULL,
+  `Objetosc` FLOAT UNSIGNED NOT NULL,
+  `Data_dostawy` DATE NOT NULL,
+  `Naleznosc` DECIMAL(8,2) UNSIGNED NOT NULL,
+  INDEX `fk_Dostawa_paliwa_Dostawca1_idx` (`Id_dostawcy` ASC) VISIBLE,
+  INDEX `fk_Dostawa_paliwa_Paliwo1_idx` (`Id_rodzaju` ASC) VISIBLE,
+  CONSTRAINT `fk_Dostawa_paliwa_Dostawca1`
+    FOREIGN KEY (`Id_dostawcy`)
+    REFERENCES `trentowskia`.`Dostawca` (`Id_dostawcy`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Dostawa_paliwa_Paliwo1`
+    FOREIGN KEY (`Id_rodzaju`)
+    REFERENCES `trentowskia`.`Paliwo` (`Id_rodzaju`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `trentowskia`.`Artykul`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `trentowskia`.`Artykul` (
+  `Id_artykulu` INT UNSIGNED NOT NULL,
+  `Nazwa_artykulu` VARCHAR(255) NOT NULL,
+  `Cena_szt` DECIMAL(7,2) NOT NULL,
+  `Stan_ilosci` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`Id_artykulu`),
+  UNIQUE INDEX `Id_artykulu_UNIQUE` (`Id_artykulu` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `trentowskia`.`Dostawa_artykulow`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `trentowskia`.`Dostawa_artykulow` (
+  `Id_dostawy_a` INT UNSIGNED NOT NULL,
+  `Id_dostawcy` INT UNSIGNED NOT NULL,
+  `Id_artykulu` INT UNSIGNED NOT NULL,
+  `Ilosc` INT UNSIGNED NOT NULL,
+  `Data_dostawy` DATE NOT NULL,
+  `Naleznosc` DECIMAL(8,2) UNSIGNED NOT NULL,
+  INDEX `fk_Dostawa_artykolow_Dostawca1_idx` (`Id_dostawcy` ASC) VISIBLE,
+  INDEX `fk_Dostawa_artykolow_Artykul1_idx` (`Id_artykulu` ASC) VISIBLE,
+  CONSTRAINT `fk_Dostawa_artykolow_Dostawca1`
+    FOREIGN KEY (`Id_dostawcy`)
+    REFERENCES `trentowskia`.`Dostawca` (`Id_dostawcy`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Dostawa_artykolow_Artykul1`
+    FOREIGN KEY (`Id_artykulu`)
+    REFERENCES `trentowskia`.`Artykul` (`Id_artykulu`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `trentowskia`.`Transakcja`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `trentowskia`.`Transakcja` (
+  `Id_transakcji` INT UNSIGNED NOT NULL,
+  `Pracownik_Pesel` INT UNSIGNED NOT NULL,
+  `Data_transakcji` DATE NOT NULL,
+  `Id_artykulu` INT UNSIGNED NULL,
+  `Ilosc_zakupiona` INT UNSIGNED NULL,
+  `Id_rodzaju` INT UNSIGNED NULL,
+  `Objetosc_zakupiona` FLOAT UNSIGNED NULL,
+  INDEX `fk_Transakcja_Pracownik1_idx` (`Pracownik_Pesel` ASC) VISIBLE,
+  INDEX `fk_Transakcja_Paliwo1_idx` (`Id_rodzaju` ASC) VISIBLE,
+  INDEX `fk_Transakcja_Artykul1_idx` (`Id_artykulu` ASC) VISIBLE,
+  CONSTRAINT `fk_Transakcja_Pracownik1`
+    FOREIGN KEY (`Pracownik_Pesel`)
+    REFERENCES `trentowskia`.`Pracownik` (`Pesel`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Transakcja_Paliwo1`
+    FOREIGN KEY (`Id_rodzaju`)
+    REFERENCES `trentowskia`.`Paliwo` (`Id_rodzaju`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Transakcja_Artykul1`
+    FOREIGN KEY (`Id_artykulu`)
+    REFERENCES `trentowskia`.`Artykul` (`Id_artykulu`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+
+
 # 1.Funkcja podająca ilość transakcji w bieżącym miesiącu
 
 
